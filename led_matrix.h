@@ -28,7 +28,7 @@ typedef struct led_matrix{
     size_t y;
     uint16_t *fb;
     int fd;
-    struct fb_fix_screeninfo fb_info;
+    struct fb_fix_screeninfo * fb_info;
 } led_matrix;
 
 void fb_put_pixel(led_matrix * lm, int x, int y, uint16_t color);
@@ -42,3 +42,4 @@ led_matrix * init_led_matrix(char * frame_buffer,
 void close_led_matrix(led_matrix * lm);
 
 #endif //LED_MATRIX_H
+
