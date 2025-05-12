@@ -21,8 +21,8 @@ matrix.o: matrix.c
 maze_gen.o: maze_gen.c
 	gcc $(CFLAGS) -c maze_gen.c
 
-valgrind: maze_gen
-	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./maze_gen
+valgrind: maze_game
+	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./maze_game
 
 clean:
 	rm -f maze_gen

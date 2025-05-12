@@ -68,16 +68,23 @@ static int find_joystick_dev()
 		char *name = dir->d_name;
 		if (!strncmp(name, "event", 5)) {
 			char *full_path = malloc(strlen(INPUT_DEV_PATH) + strlen(name) + 2);
+			if (full_path == NULL){
+			  printf("Error in Allocation");
+			  exit(1);
+			}
 			strcpy(full_path, INPUT_DEV_PATH);
 			strcat(full_path, "/");
 			strcat(full_path, name);
 			fd = try_joystick_dev(full_path);
 			if (fd >= 0) {
 				printf("Joystick found as device: %s\n", full_path);
+				free(full_path);
 				break;
 			}
+			free(full_path);
 		}
 	}
+        
 	closedir(d);
 	return fd;
 }
@@ -207,7 +214,8 @@ int main(int argv, char * argc[])
 			case -1:
 				close(fd);
 				close_led_matrix(game.matrix);
-				free(game.maze);
+				maze_free(game.maze);
+				matrix_free(game.board);
 				exit(1);
 				break;
 
@@ -241,7 +249,8 @@ int main(int argv, char * argc[])
 
 
 	}
-	free(game.maze);
+	maze_free(game.maze);
+	matrix_free(game.board);
 	close(fd);
 	close_led_matrix(game.matrix);
 
