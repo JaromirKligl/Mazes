@@ -4,24 +4,16 @@
 
 #include "maze.h"
 #include "matrix.h"
+#include "led_matrix.h"
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <stdint.h>
-#include <string.h>
-#include <unistd.h>
-#include <fcntl.h>
-#include <sys/mman.h>
-#include <sys/ioctl.h>
-#include <linux/fb.h>
-#include <netpbm/ppm.h>
+
 
 
 
 /** vycisti obsah framebufferu zadanou barvou */
 void fb_clear(led_matrix * lm, uint16_t color)
 {
-    for (int i = 0; i < lm->x * lm->y; i++)
+    for (size_t i = 0; i < lm->x * lm->y; i++)
         lm->fb[i] = color;
 }
 
@@ -55,7 +47,7 @@ led_matrix * init_led_matrix(char * frame_buffer,
         exit(1);
     }
 
-    struct fb_fix_screeninfo * fb_info = malloc(sizeof(fb_fix_screeninfo));
+    struct fb_fix_screeninfo * fb_info = malloc(sizeof(struct fb_fix_screeninfo));
     if (fb_info == NULL){
         printf("Error in Allocation");
         exit(1);
