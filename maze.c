@@ -13,6 +13,11 @@ char set_right_dir(char i){
     return DIR_RIGHT;
 }
 
+static inline void set_at_root(maze * maze, char value) {
+    matrix_set(maze->board, maze->root_x, maze->root_y, value);
+}
+
+
 maze * make_maze(int width, int hight) {
     maze * out = malloc(sizeof(maze));
     if (out == NULL) {
@@ -33,7 +38,10 @@ maze * make_maze(int width, int hight) {
     return out;
 }
 
-
+void maze_free(maze * maze){
+    matrix_free(maze->board);
+    free(maze);
+}
 
 
 char choose_direciton(maze * maze) {
@@ -100,7 +108,7 @@ void origin_shift(maze * maze, int iterations) {
 
 
 
-char set_space(char u) {
+char set_wall(char u) {
     (void)u;
     return 'X';
 }
@@ -109,18 +117,19 @@ int is_even(size_t num) {
     return num % 2;
 }
 
-void print_maze(maze * maze) {
+matrix * gen_maze_to_matrix(maze * maze){
+
     matrix * mm = make_matrix((maze->board->x * 2) + 1,(maze->board->y * 2) + 1);
 
-    matrix_inplace_map(mm,set_space);
+    matrix_inplace_map(mm,set_wall);
 
     for (size_t i = 0; i < mm->x; i++) {{
         for (size_t j = 0; j < mm->y; j++) {
             if (is_even(j) && is_even(i)){
                 matrix_set(mm,i,j,' ');
-                }
             }
         }
+    }
     }
 
     for (size_t k = 0; k < maze->board->x; k++) {
@@ -129,41 +138,31 @@ void print_maze(maze * maze) {
             switch(direction){
                 case DIR_RIGHT:
                     matrix_set(mm,(k + 1) * 2, (j * 2) + 1,' ');
-                    break;
+                break;
                 case DIR_DOWN:
                     matrix_set(mm,(k * 2) + 1, (j + 1) * 2,' ');
-                    break;
+                break;
                 case DIR_UP:
                     matrix_set(mm,(k * 2) + 1, (j * 2),' ');
-                    break;
+                break;
                 case DIR_LEFT:
                     matrix_set(mm,(k * 2), (j * 2) + 1,' ');
-                    break;
+                break;
                 default:
                     break;
             }
         }
     }
+    return mm;
+};
 
+
+void print_maze(maze * maze) {
+    matrix * mm = gen_maze_to_matrix(maze);
     print_matrix(mm);
-    free(mm);
-
+    matrix_free(mm);
 }
 
-
-int main(int argv, char * argc[]) {
-    int x = 5;
-    int y = 5;
-    if (argv > 2) {
-        x = atoi(argc[1]);
-        y = atoi(argc[2]);
-    }
-
-    maze * maze = make_maze(x,y);
-    origin_shift(maze,x * y * 10);
-    print_maze(maze);
-    return 0;
-}
 
 
 

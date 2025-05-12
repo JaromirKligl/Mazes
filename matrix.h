@@ -4,6 +4,8 @@
 #ifndef MATRIX_H
 #define MATRIX_H
 
+#include <stdio.h>
+#include <stdlib.h>
 
 /* Matrix is 1D array of data of size x*y
  * cols are computed as skip of x items
